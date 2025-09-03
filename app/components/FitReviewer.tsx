@@ -343,52 +343,52 @@ Kurallar: Kısa ve öz ol. Asla yüzlerden, vücut şekillerinden veya hassas ö
         ctx.fill()
 
         ctx.fillStyle = textColor
-        const padding = 60
+        const padding = 70 // Padding biraz arttırıldı
         const contentWidth = W - padding * 2
-        const lineSpacing = 30 // Satırlar arası boşluk arttırıldı
+        const lineSpacing = 35 // Satırlar arası boşluk arttırıldı
 
-        // Style persona - daha küçük
-        ctx.font = 'bold 36px Arial'
+        // Style persona - daha belirgin
+        ctx.font = 'bold 38px Arial'
         ctx.textAlign = 'left'
-        let currentY = H - overlayHeight + 60
+        let currentY = H - overlayHeight + 50
         ctx.fillText(data.style_persona.toUpperCase(), padding, currentY)
 
-        // One liner - daha küçük
-        currentY += 60
-        ctx.font = 'bold 48px Arial'
-        currentY = wrapText(ctx, `"${data.one_liner}"`, padding, currentY, contentWidth, 58)
+        // One liner - daha okunabilir
+        currentY += 65
+        ctx.font = 'bold 44px Arial'
+        currentY = wrapText(ctx, `"${data.one_liner}"`, padding, currentY, contentWidth, 52)
         currentY += lineSpacing
 
-        // Body text - daha küçük
-        ctx.font = '30px Arial'
-        currentY = wrapText(ctx, data.body, padding, currentY, contentWidth, 42)
+        // Body text - optimize edildi
+        ctx.font = '32px Arial'
+        currentY = wrapText(ctx, data.body, padding, currentY, contentWidth, 44)
         currentY += lineSpacing
 
-        // İpuçları başlığı - daha küçük
-        ctx.font = 'bold 30px Arial'
+        // İpuçları başlığı - daha belirgin
+        ctx.font = 'bold 32px Arial'
         ctx.fillText('İpuçları:', padding, currentY)
-        currentY += 45
+        currentY += 50
         
-        // İpuçları listesi - daha küçük
-        ctx.font = '28px Arial'
+        // İpuçları listesi - daha okunabilir
+        ctx.font = '30px Arial'
         data.tips.slice(0, 3).forEach((tip, index) => {
-          currentY = wrapText(ctx, `• ${tip}`, padding, currentY, contentWidth, 36)
-          if (index < 2) currentY += 20 // İpuçları arasındaki boşluk
+          currentY = wrapText(ctx, `• ${tip}`, padding, currentY, contentWidth, 38)
+          if (index < 2) currentY += 25 // İpuçları arasındaki boşluk
         })
 
-        // Hashtags - en alt kısımda
-        ctx.font = '28px Arial'
-        ctx.fillStyle = textColor === '#000000' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.6)'
+        // Hashtags - daha görünür konumda
+        ctx.font = '26px Arial'
+        ctx.fillStyle = textColor === '#000000' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)'
         const hashtags = data.hashtags
           .slice(0, 5)
           .map((h) => `#${h}`)
           .join(' ')
-        ctx.fillText(hashtags, padding, H - 40)
+        ctx.fillText(hashtags, padding, H - 35)
 
-        // Score badge - daha küçük ve daha yukırıda
-        const badgeRadius = 70
-        const badgeX = W - padding - badgeRadius - 20
-        const badgeY = H - overlayHeight + badgeRadius + 30
+        // Score badge - optimize konumu ve boyutu
+        const badgeRadius = 75
+        const badgeX = W - padding - badgeRadius - 15
+        const badgeY = H - overlayHeight + badgeRadius + 25
         
         // Badge background
         ctx.beginPath()
@@ -396,19 +396,19 @@ Kurallar: Kısa ve öz ol. Asla yüzlerden, vücut şekillerinden veya hassas ö
         ctx.fillStyle = textColor
         ctx.fill()
 
-        // Score text - daha küçük
-        ctx.font = 'bold 56px Arial'
+        // Score text - daha okunabilir
+        ctx.font = 'bold 60px Arial'
         ctx.fillStyle = `rgb(${avgColor.r}, ${avgColor.g}, ${avgColor.b})`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(data.score.toString(), badgeX, badgeY)
 
-        // Brand text - daha küçük
-        ctx.font = '20px Arial'
+        // Brand text - daha görünür
+        ctx.font = '22px Arial'
         ctx.fillStyle = textColor
         ctx.textAlign = 'right'
-        ctx.globalAlpha = 0.7
-        ctx.fillText('fitimiyorumla.ai', W - padding, H - overlayHeight - 15)
+        ctx.globalAlpha = 0.8
+        ctx.fillText('fitimiyorumla.ai', W - padding, H - overlayHeight - 12)
         ctx.globalAlpha = 1.0
         ctx.textBaseline = 'alphabetic'
         

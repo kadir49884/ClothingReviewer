@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST='{"app\\\\components\\\\FitReviewer.tsx -> @google/genai":{"id":954,"files":["static/chunks/95247769.422293cc7a2f3549.js"]}}';

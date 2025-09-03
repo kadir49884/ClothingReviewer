@@ -264,22 +264,31 @@ Kurallar: Kısa ve öz ol. Asla yüzlerden, vücut şekillerinden veya hassas ö
     y: number,
     maxWidth: number,
     lineHeight: number,
-  ) => {
+  ): number => {
     const words = text.split(' ')
     let line = ''
+    let currentY = y
+    
     for (let n = 0; n < words.length; n++) {
       const testLine = line + words[n] + ' '
       const metrics = ctx.measureText(testLine)
       const testWidth = metrics.width
+      
       if (testWidth > maxWidth && n > 0) {
-        ctx.fillText(line, x, y)
+        ctx.fillText(line.trim(), x, currentY)
         line = words[n] + ' '
-        y += lineHeight
+        currentY += lineHeight
       } else {
         line = testLine
       }
     }
-    ctx.fillText(line, x, y)
+    
+    if (line.trim()) {
+      ctx.fillText(line.trim(), x, currentY)
+      currentY += lineHeight
+    }
+    
+    return currentY
   }
 
   const drawScorecard = async (imgSrc: string, data: AnalysisResult, blurFace: boolean) => {
@@ -336,61 +345,70 @@ Kurallar: Kısa ve öz ol. Asla yüzlerden, vücut şekillerinden veya hassas ö
         ctx.fillStyle = textColor
         const padding = 60
         const contentWidth = W - padding * 2
+        const lineSpacing = 25 // Extra boşluk satırlar arasında
 
-        ctx.font = 'bold 48px Arial'
+        // Style persona
+        ctx.font = 'bold 42px Arial'
         ctx.textAlign = 'left'
-        let currentY = H - overlayHeight + 80
+        let currentY = H - overlayHeight + 70
         ctx.fillText(data.style_persona.toUpperCase(), padding, currentY)
 
-        currentY += 80
-        ctx.font = '600 72px Arial'
-        wrapText(ctx, `"${data.one_liner}"`, padding, currentY, contentWidth, 80)
-        currentY += 180
+        // One liner
+        currentY += 70
+        ctx.font = 'bold 58px Arial'
+        currentY = wrapText(ctx, `"${data.one_liner}"`, padding, currentY, contentWidth, 70)
+        currentY += lineSpacing
 
-        ctx.font = '40px Arial'
-        wrapText(ctx, data.body, padding, currentY, contentWidth, 55)
-        currentY += 150
+        // Body text
+        ctx.font = '36px Arial'
+        currentY = wrapText(ctx, data.body, padding, currentY, contentWidth, 50)
+        currentY += lineSpacing
 
-        ctx.font = 'bold 40px Arial'
+        // İpuçları başlığı
+        ctx.font = 'bold 36px Arial'
         ctx.fillText('İpuçları:', padding, currentY)
-        currentY += 60
-        ctx.font = '40px Arial'
-        data.tips.slice(0, 3).forEach((tip) => {
-          wrapText(ctx, `• ${tip}`, padding, currentY, contentWidth, 55)
-          currentY += 55
+        currentY += 50
+        
+        // İpuçları listesi
+        ctx.font = '32px Arial'
+        data.tips.slice(0, 3).forEach((tip, index) => {
+          currentY = wrapText(ctx, `• ${tip}`, padding, currentY, contentWidth, 45)
+          if (index < 2) currentY += 15 // İpuçları arasında ek boşluk
         })
 
-        currentY = H - 60
-        ctx.font = '32px Arial'
+        // Hashtags - en alt kısımda
+        ctx.font = '28px Arial'
         ctx.fillStyle = textColor === '#000000' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.6)'
-        ctx.fillText(
-          data.hashtags
-            .slice(0, 5)
-            .map((h) => `#${h}`)
-            .join(' '),
-          padding,
-          currentY,
-        )
+        const hashtags = data.hashtags
+          .slice(0, 5)
+          .map((h) => `#${h}`)
+          .join(' ')
+        ctx.fillText(hashtags, padding, H - 40)
 
-        const badgeRadius = 100
+        // Score badge - sağ üst köşede
+        const badgeRadius = 80
         const badgeX = W - padding - badgeRadius
-        const badgeY = H - overlayHeight
+        const badgeY = H - overlayHeight + badgeRadius + 20
+        
+        // Badge background
         ctx.beginPath()
         ctx.arc(badgeX, badgeY, badgeRadius, 0, Math.PI * 2)
         ctx.fillStyle = textColor
         ctx.fill()
 
-        ctx.font = 'bold 96px Arial'
+        // Score text
+        ctx.font = 'bold 72px Arial'
         ctx.fillStyle = `rgb(${avgColor.r}, ${avgColor.g}, ${avgColor.b})`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(data.score.toString(), badgeX, badgeY)
 
-        ctx.font = '28px Arial'
+        // Brand text
+        ctx.font = '24px Arial'
         ctx.fillStyle = textColor
         ctx.textAlign = 'right'
         ctx.globalAlpha = 0.7
-        ctx.fillText('roastmyfit.ai', W - padding, H - overlayHeight - 30)
+        ctx.fillText('fitimiyorumla.ai', W - padding, H - overlayHeight - 20)
         ctx.globalAlpha = 1.0
         ctx.textBaseline = 'alphabetic'
         

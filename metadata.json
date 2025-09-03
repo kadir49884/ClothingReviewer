@@ -1,0 +1,8 @@
+
+{
+  "name": "Fit'imi Yorumla",
+  "description": "YZ kıyafet değerlendirici, yorumlama veya övme modu ile. Kıyafetinizi YZ'ye puanlatın ve paylaşılabilir bir skor kartı alın.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

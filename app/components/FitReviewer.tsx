@@ -487,6 +487,7 @@ Kurallar: Kısa ve öz ol. Asla yüzlerden, vücut şekillerinden veya hassas ö
     }
   }
 
+  
   return (
     <div id="app">
       {/* Upload Panel */}
